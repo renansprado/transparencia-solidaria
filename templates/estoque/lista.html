@@ -1,0 +1,183 @@
+{% extends "_base.html" %}
+
+{% block navigation %}
+<nav class="navbar navbar-expand-md navbar-light bg-white border-bottom px-3">
+  <div class="container-app w-100 d-flex justify-content-between align-items-center">
+    <a class="navbar-brand fw-bold text-success" href="/">
+      <i class="bi bi-box-seam me-1"></i>Estoque Solidário
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+      aria-controls="navMenu" aria-expanded="false" aria-label="Alternar menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-2">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Início</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active fw-semibold" href="/estoque/">Estoque</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/entidade">Entidades</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<section class="py-4 px-3">
+  <div class="container-app">
+
+    {# ── Cabeçalho ── #}
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+      <div>
+        <h1 class="h4 mb-1 fw-bold">Registros de Estoque</h1>
+        <p class="text-muted mb-0 small">
+          {{ total_itens }} item(s) exibido(s)
+          {% if categoria_selecionada %}
+            &mdash; categoria: <strong>{{ categoria_selecionada }}</strong>
+          {% endif %}
+        </p>
+      </div>
+      {# Filtro por categoria #}
+      <form method="get" action="/estoque/" class="d-flex gap-2 align-items-center">
+        <label for="catFiltro" class="visually-hidden">Categoria</label>
+        <select id="catFiltro" name="categoria" class="form-select form-select-sm" style="min-width:160px;">
+          <option value="">Todas as categorias</option>
+          {% for cat in categorias %}
+            <option value="{{ cat }}" {% if cat == categoria_selecionada %}selected{% endif %}>
+              {{ cat }}
+            </option>
+          {% endfor %}
+        </select>
+        <input type="hidden" name="pagina" value="1">
+        <input type="hidden" name="por_pagina" value="{{ por_pagina }}">
+        <button class="btn btn-sm btn-success" type="submit">Filtrar</button>
+        {% if categoria_selecionada %}
+          <a href="/estoque/" class="btn btn-sm btn-outline-secondary">Limpar</a>
+        {% endif %}
+      </form>
+    </div>
+
+    {# ── Tabela ── #}
+    {% if itens %}
+    <div class="table-responsive rounded border">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Entidade</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Categoria</th>
+            <th scope="col" class="text-end">Qtd. Atual</th>
+            <th scope="col" class="text-end">Qtd. Necessária</th>
+            <th scope="col">Unidade</th>
+            <th scope="col">Situação</th>
+            <th scope="col">Atualizado em</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in itens %}
+          <tr>
+            <td class="text-muted small">{{ item.id }}</td>
+            <td class="fw-semibold">{{ item.entidade.nome }}</td>
+            <td>{{ item.produto }}</td>
+            <td>
+              <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary border">
+                {{ item.categoria }}
+              </span>
+            </td>
+            <td class="text-end">{{ '%.1f'|format(item.quantidade_atual) }}</td>
+            <td class="text-end">{{ '%.1f'|format(item.quantidade_necessaria) }}</td>
+            <td class="text-muted small">{{ item.unidade }}</td>
+            <td>
+              {# Barra de progresso + badge de status #}
+              <div class="d-flex flex-column gap-1" style="min-width:120px;">
+                <div class="progress" style="height:6px;" role="progressbar"
+                  aria-valuenow="{{ item.percentual_estoque }}"
+                  aria-valuemin="0" aria-valuemax="100"
+                  aria-label="{{ item.percentual_estoque }}% do estoque necessário">
+                  <div class="progress-bar
+                    {% if item.status == 'critico' %}bg-danger
+                    {% elif item.status == 'baixo' %}bg-warning
+                    {% else %}bg-success{% endif %}"
+                    style="width:{{ [item.percentual_estoque, 100]|min }}%"></div>
+                </div>
+                <span class="badge
+                  {% if item.status == 'critico' %}bg-danger
+                  {% elif item.status == 'baixo' %}bg-warning text-dark
+                  {% else %}bg-success{% endif %} small">
+                  {% if item.status == 'critico' %}Crítico
+                  {% elif item.status == 'baixo' %}Baixo
+                  {% else %}Adequado{% endif %}
+                  ({{ item.percentual_estoque }}%)
+                </span>
+              </div>
+            </td>
+            <td class="text-muted small">{{ item.atualizado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {# ── Paginação ── #}
+    <nav aria-label="Paginação de estoque" class="mt-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <span class="text-muted small">Página {{ pagina }}</span>
+      <ul class="pagination pagination-sm mb-0">
+        {% if pagina > 1 %}
+        <li class="page-item">
+          <a class="page-link" href="?pagina={{ pagina - 1 }}&por_pagina={{ por_pagina }}{% if categoria_selecionada %}&categoria={{ categoria_selecionada }}{% endif %}">
+            &laquo; Anterior
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo; Anterior</span></li>
+        {% endif %}
+
+        {% if total_itens == por_pagina %}
+        <li class="page-item">
+          <a class="page-link" href="?pagina={{ pagina + 1 }}&por_pagina={{ por_pagina }}{% if categoria_selecionada %}&categoria={{ categoria_selecionada }}{% endif %}">
+            Próxima &raquo;
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Próxima &raquo;</span></li>
+        {% endif %}
+      </ul>
+      <form method="get" action="/estoque/" class="d-flex gap-1 align-items-center">
+        <input type="hidden" name="pagina" value="{{ pagina }}">
+        {% if categoria_selecionada %}
+        <input type="hidden" name="categoria" value="{{ categoria_selecionada }}">
+        {% endif %}
+        <label for="porPagina" class="text-muted small mb-0">Itens/pág:</label>
+        <select id="porPagina" name="por_pagina" class="form-select form-select-sm" style="width:70px;" onchange="this.form.submit()">
+          {% for n in [10, 20, 50, 100] %}
+          <option value="{{ n }}" {% if n == por_pagina %}selected{% endif %}>{{ n }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </nav>
+
+    {% else %}
+    {# Estado vazio #}
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+      <h5>Nenhum item encontrado</h5>
+      <p class="small">
+        {% if categoria_selecionada %}
+          Não há itens na categoria <strong>{{ categoria_selecionada }}</strong>.
+          <a href="/estoque/">Ver todos</a>
+        {% else %}
+          O banco de dados ainda não possui registros de estoque.
+        {% endif %}
+      </p>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}
