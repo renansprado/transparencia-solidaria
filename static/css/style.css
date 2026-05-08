@@ -1,3 +1,7 @@
+/* section[id] {
+    scroll-margin-top: 500px;
+} */
+
 :root,
 [data-theme="light"] {
     --color-bg: #f4f4f3;
@@ -99,7 +103,8 @@
 
 html {
     scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 0px;
+    /* -webkit-text-size-adjust: 100%; */
 }
 
 body {

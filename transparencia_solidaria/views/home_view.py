@@ -10,3 +10,9 @@ router = APIRouter()
 async def index(request: Request):
     context = {'request': request}
     return settings.TEMPLATES.TemplateResponse(name='index.html', **context)
+
+
+@router.get('/entidade', name='entidade')
+async def index(request: Request):
+    context = {'request': request}
+    return settings.TEMPLATES.TemplateResponse(name='entidade.html', **context)

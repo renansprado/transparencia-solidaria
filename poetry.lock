@@ -682,6 +682,18 @@ files = [
 ]
 
 [[package]]
+name = "itsdangerous"
+version = "2.2.0"
+description = "Safely pass data to untrusted environments and back."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "itsdangerous-2.2.0-py3-none-any.whl", hash = "sha256:c6242fc49e35958c8b15141343aa660db5fc54d4f13a1db01a3f5891b98700ef"},
+    {file = "itsdangerous-2.2.0.tar.gz", hash = "sha256:e0050c0b7da1eea53ffaf149c0cfbb5c6e2e2b69c4bef22c81fa6eb73e5f6173"},
+]
+
+[[package]]
 name = "jinja2"
 version = "3.1.6"
 description = "A very fast and expressive template engine."
@@ -1584,6 +1596,29 @@ files = [
 ]
 
 [[package]]
+name = "sqladmin"
+version = "0.25.0"
+description = "SQLAlchemy admin for FastAPI and Starlette"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "sqladmin-0.25.0-py3-none-any.whl", hash = "sha256:fd45a7c78e989cb1cf8242f94bd108475f5d35622d79035a2cb147350f54ce1d"},
+    {file = "sqladmin-0.25.0.tar.gz", hash = "sha256:370f183eca5ea95281176c086b23d704773e6c77b745342753601a9a9abcb93c"},
+]
+
+[package.dependencies]
+itsdangerous = {version = "*", optional = true, markers = "extra == \"full\""}
+jinja2 = "*"
+python-multipart = "*"
+sqlalchemy = ">=2.0"
+starlette = {version = ">=0.50,<2.0.0", markers = "python_full_version >= \"3.10.0\""}
+wtforms = ">=3.1,<3.2"
+
+[package.extras]
+full = ["itsdangerous"]
+
+[[package]]
 name = "sqlalchemy"
 version = "2.0.49"
 description = "Database Abstraction Library"
@@ -2125,7 +2160,25 @@ files = [
     {file = "websockets-16.0.tar.gz", hash = "sha256:5f6261a5e56e8d5c42a4497b364ea24d94d9563e8fbd44e78ac40879c60179b5"},
 ]
 
+[[package]]
+name = "wtforms"
+version = "3.1.2"
+description = "Form validation and rendering for Python web development."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "wtforms-3.1.2-py3-none-any.whl", hash = "sha256:bf831c042829c8cdbad74c27575098d541d039b1faa74c771545ecac916f2c07"},
+    {file = "wtforms-3.1.2.tar.gz", hash = "sha256:f8d76180d7239c94c6322f7990ae1216dae3659b7aa1cee94b6318bdffb474b9"},
+]
+
+[package.dependencies]
+markupsafe = "*"
+
+[package.extras]
+email = ["email-validator"]
+
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14, <4.0"
-content-hash = "816c5f9f3ec47589d02672aca3d297516fec8a2b8caa67002cef433ca03880be"
+content-hash = "711c0515aff1464f3175f947b902b02539e16c636961c759ee319465c1798b6b"
