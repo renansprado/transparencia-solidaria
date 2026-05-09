@@ -5,16 +5,15 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from transparencia_solidaria.core.configs import settings
 
-Base = settings.DBBaseModel
 
-
-class Entidade(Base):
+class Entidade(settings.DBBaseModel):
     """Entidade beneficente cadastrada no sistema."""
 
     __tablename__ = 'entidades'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     nome: Mapped[str] = mapped_column(String(200), nullable=False)
+    fundacao: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     cidade: Mapped[str] = mapped_column(String(100), nullable=False)
     estado: Mapped[str] = mapped_column(String(2), nullable=False)
     telefone: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -26,7 +25,7 @@ class Entidade(Base):
         return f'<Entidade id={self.id} nome={self.nome!r}>'
 
 
-class ItemEstoque(Base):
+class ItemEstoque(settings.DBBaseModel):
     """Item de estoque vinculado a uma entidade."""
 
     __tablename__ = 'itens_estoque'

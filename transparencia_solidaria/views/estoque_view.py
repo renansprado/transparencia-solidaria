@@ -40,4 +40,4 @@ async def lista_estoque(
         'por_pagina': por_pagina,
         'total_itens': len(itens),
     }
-    return settings.TEMPLATES.TemplateResponse(name='estoque/lista.html', context=context)
+    return settings.TEMPLATES.TemplateResponse(name='estoque/lista.html', request=request, context=context)
