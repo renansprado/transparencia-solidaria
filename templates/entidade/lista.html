@@ -1,0 +1,156 @@
+<section class="template-hero">
+    <div class="container-app">
+        <span class="section-kicker mb-3">Cadastro</span>
+        <h1 class="page-title mb-3">Entidades</h1>
+        <p class="page-lead mb-0">
+            Lista de entidades beneficentes cadastradas, com cidade e estado.
+        </p>
+    </div>
+</section>
+
+<section id="bloco-principal" class="pt-0">
+    <div class="container-app">
+        <div class="row g-4">
+
+            {# ── Tabela principal ── #}
+            <div class="col-lg-9">
+                <article class="template-block h-100">
+                    <h2 class="section-title mb-3">
+                        Entidades cadastradas
+                        <span class="badge bg-secondary ms-2 fw-normal fs-6">
+                            {{ total_entidades }}
+                        </span>
+                    </h2>
+
+                    <div class="app-table-wrap mt-2">
+                        <div class="table-responsive">
+                            <table class="table table-app align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <a href="?ordenar_por=nome&ordem={% if ordenar_por == 'nome' and ordem == 'asc' %}desc{% else %}asc{% endif %}&estado={{ estado_selecionado or '' }}&cidade={{ cidade_selecionada or '' }}"
+                                                class="app-link d-flex align-items-center gap-1">
+                                                Nome
+                                                {% if ordenar_por == 'nome' %}
+                                                <i
+                                                    class="bi bi-caret-{{ 'down' if ordem == 'desc' else 'up' }}-fill"></i>
+                                                {% endif %}
+                                            </a>
+                                        </th>
+                                        <th>Cidade</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entidade in entidades %}
+                                    <tr>
+                                        <td class="fw-medium">{{ entidade.nome }}</td>
+                                        <td>{{ entidade.cidade.nome }}</td>
+                                        <td>
+                                            <span class="status-chip status-info">
+                                                {{ entidade.cidade.estado.sigla }}
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a href="{{ url_for('entidade_detalhe', entidade_id=entidade.id) }}"
+                                                class="btn btn-app btn-outline-app btn-sm">
+                                                <i class="bi bi-eye me-1"></i>Ver
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <i class="bi bi-building-slash fs-2 text-muted d-block mb-2"></i>
+                                            <span class="text-muted">Nenhuma entidade encontrada.</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {# Paginação #}
+                    {% if total_entidades == por_pagina or pagina > 1 %}
+                    <nav class="d-flex justify-content-between align-items-center mt-4" aria-label="Paginação">
+                        <span class="text-muted" style="font-size: var(--text-sm);">
+                            Página {{ pagina }}
+                        </span>
+                        <div class="d-flex gap-2">
+                            {% if pagina > 1 %}
+                            <a href="?pagina={{ pagina - 1 }}&ordenar_por={{ ordenar_por }}&ordem={{ ordem }}&estado={{ estado_selecionado or '' }}&cidade={{ cidade_selecionada or '' }}"
+                                class="btn btn-app btn-outline-app btn-sm">
+                                <i class="bi bi-chevron-left"></i> Anterior
+                            </a>
+                            {% endif %}
+                            {% if total_entidades == por_pagina %}
+                            <a href="?pagina={{ pagina + 1 }}&ordenar_por={{ ordenar_por }}&ordem={{ ordem }}&estado={{ estado_selecionado or '' }}&cidade={{ cidade_selecionada or '' }}"
+                                class="btn btn-app btn-primary-app btn-sm">
+                                Próxima <i class="bi bi-chevron-right"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </nav>
+                    {% endif %}
+
+                </article>
+            </div>
+
+            {# ── Sidebar de filtros ── #}
+            <div class="col-lg-3">
+                <article class="template-block h-100">
+                    <h2 class="h4 mb-3">Filtros</h2>
+
+                    <form method="get" action="{{ url_for('entidade_lista') }}" class="row g-3">
+                        <div class="col-12">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select" id="estado" name="estado" onchange="this.form.submit()">
+                                <option value="">Todos</option>
+                                {% for e in estados %}
+                                <option value="{{ e.sigla }}" {% if estado_selecionado==e.sigla %}selected{% endif %}>
+                                    {{ e.sigla }} — {{ e.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="cidade" class="form-label">Cidade</label>
+                            <select class="form-select" id="cidade" name="cidade">
+                                <option value="">Todas</option>
+                                {% for c in cidades %}
+                                <option value="{{ c.nome }}" {% if cidade_selecionada==c.nome %}selected{% endif %}>
+                                    {{ c.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 d-flex gap-2 flex-wrap">
+                            <button type="submit" class="btn btn-app btn-primary-app w-100">
+                                <i class="bi bi-funnel me-1"></i>Filtrar
+                            </button>
+                            <a href="{{ url_for('entidade_lista') }}" class="btn btn-app btn-outline-app w-100">
+                                Limpar filtros
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+                    <ul class="utility-list mb-0">
+                        <li>{{ total_entidades }} resultado(s) nesta página</li>
+                        {% if estado_selecionado %}
+                        <li>Estado: <strong>{{ estado_selecionado }}</strong></li>
+                        {% endif %}
+                        {% if cidade_selecionada %}
+                        <li>Cidade: <strong>{{ cidade_selecionada }}</strong></li>
+                        {% endif %}
+                    </ul>
+                </article>
+            </div>
+
+        </div>
+    </div>
+</section>

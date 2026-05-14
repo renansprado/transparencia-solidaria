@@ -1,12 +1,14 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from transparencia_solidaria.views import home_view, estoque_view
+from transparencia_solidaria.views import home_view, estoque_view, entidade_view
+
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
 app.include_router(home_view.router)
 app.include_router(estoque_view.router)
+app.include_router(entidade_view.router)
 
 app.mount('/static', StaticFiles(directory='static'), name='static')
 app.mount('/media', StaticFiles(directory='media'), name='media')
