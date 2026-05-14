@@ -26,3 +26,49 @@ DB_PASSWORD=sua_senha
 ```bash
 poetry run fastapi dev main.py
 ```
+
+## Banco de dados
+- Rode o script em `create_base.py` para criar as tabelas no banco de dados (postgre).
+- Na pasta `queries`, há uma consulta SQL criadas para popular preliminarmente.
+  - Rode elas usando o terminal ou o [pgAdmin](https://www.pgadmin.org/).
+  - Rode as queries na seguintes sequência: `estados_insert.sql`, `cidades_insert.sql` e `entidades_insert.sql`.
+
+### Diagrama ER
+```mermaid
+erDiagram
+    ESTADOS {
+        int id PK
+        string sigla
+        string nome
+    }
+
+    CIDADES {
+        int id PK
+        string nome
+        int estado_id FK
+    }
+
+    ENTIDADES {
+        int id PK
+        string nome
+        datetime fundacao
+        int cidade_id FK
+        string telefone
+        datetime criado_em
+    }
+
+    ITENS_ESTOQUE {
+        int id PK
+        int entidade_id FK
+        string produto
+        string categoria
+        float quantidade_atual
+        float quantidade_necessaria
+        string unidade
+        datetime atualizado_em
+    }
+
+    ESTADOS ||--o{ CIDADES : "possui"
+    CIDADES ||--o{ ENTIDADES : "abriga"
+    ENTIDADES ||--o{ ITENS_ESTOQUE : "tem"
+```

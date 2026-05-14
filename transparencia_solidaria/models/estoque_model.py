@@ -1,47 +1,111 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, func
+from sqlalchemy import (
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    func,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from transparencia_solidaria.core.configs import settings
 
 
+class Estado(settings.DBBaseModel):
+    """Estado cadastrado no sistema."""
+
+    __tablename__ = "estados"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    sigla: Mapped[str] = mapped_column(String(2), nullable=False, unique=True)
+    nome: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+
+    cidades: Mapped[list["Cidade"]] = relationship(
+        "Cidade", back_populates="estado", lazy="select", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Estado id={self.id} sigla={self.sigla!r} nome={self.nome!r}>"
+
+
+class Cidade(settings.DBBaseModel):
+    __tablename__ = "cidades"
+    __table_args__ = (
+        UniqueConstraint("nome", "estado_id", name="uq_cidade_nome_estado"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nome: Mapped[str] = mapped_column(String(100), nullable=False)
+    estado_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("estados.id", ondelete="CASCADE"), nullable=False
+    )
+
+    estado: Mapped["Estado"] = relationship(
+        "Estado", back_populates="cidades", lazy="select"
+    )
+
+    entidades: Mapped[list["Entidade"]] = relationship(
+        "Entidade", back_populates="cidade", lazy="select"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Cidade id={self.id} nome={self.nome!r} estado_id={self.estado_id}>"
+
+
 class Entidade(settings.DBBaseModel):
     """Entidade beneficente cadastrada no sistema."""
 
-    __tablename__ = 'entidades'
+    __tablename__ = "entidades"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     nome: Mapped[str] = mapped_column(String(200), nullable=False)
-    fundacao: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    cidade: Mapped[str] = mapped_column(String(100), nullable=False)
-    estado: Mapped[str] = mapped_column(String(2), nullable=False)
+    fundacao: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    cidade_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("cidades.id", ondelete="RESTRICT"), nullable=False
+    )
     telefone: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    criado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    criado_em: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    url: Mapped[str] = mapped_column(String(200), nullable=True)
+    email: Mapped[str] = mapped_column(String(200), nullable=True)
 
-    itens: Mapped[list['ItemEstoque']] = relationship('ItemEstoque', back_populates='entidade', lazy='select')
+    cidade: Mapped["Cidade"] = relationship(
+        "Cidade", back_populates="entidades", lazy="select"
+    )
+
+    itens: Mapped[list["ItemEstoque"]] = relationship(
+        "ItemEstoque", back_populates="entidade", lazy="select"
+    )
 
     def __repr__(self) -> str:
-        return f'<Entidade id={self.id} nome={self.nome!r}>'
+        return f"<Entidade id={self.id} nome={self.nome!r}>"
 
 
 class ItemEstoque(settings.DBBaseModel):
     """Item de estoque vinculado a uma entidade."""
 
-    __tablename__ = 'itens_estoque'
+    __tablename__ = "itens_estoque"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    entidade_id: Mapped[int] = mapped_column(Integer, ForeignKey('entidades.id', ondelete='CASCADE'), nullable=False)
+    entidade_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("entidades.id", ondelete="CASCADE"), nullable=False
+    )
     produto: Mapped[str] = mapped_column(String(200), nullable=False)
     categoria: Mapped[str] = mapped_column(String(100), nullable=False)
     quantidade_atual: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
-    quantidade_necessaria: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
-    unidade: Mapped[str] = mapped_column(String(20), nullable=False, default='kg')
+    quantidade_necessaria: Mapped[float] = mapped_column(
+        Float, nullable=False, default=0.0
+    )
+    unidade: Mapped[str] = mapped_column(String(20), nullable=False, default="kg")
     atualizado_em: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    entidade: Mapped['Entidade'] = relationship('Entidade', back_populates='itens')
+    entidade: Mapped["Entidade"] = relationship("Entidade", back_populates="itens")
 
     @property
     def percentual_estoque(self) -> float:
@@ -54,10 +118,10 @@ class ItemEstoque(settings.DBBaseModel):
     def status(self) -> str:
         p = self.percentual_estoque
         if p < 25:
-            return 'critico'
+            return "critico"
         if p < 60:
-            return 'baixo'
-        return 'adequado'
+            return "baixo"
+        return "adequado"
 
     def __repr__(self) -> str:
-        return f'<ItemEstoque id={self.id} produto={self.produto!r}>'
+        return f"<ItemEstoque id={self.id} produto={self.produto!r}>"

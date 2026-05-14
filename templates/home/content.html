@@ -3,9 +3,9 @@
         <div class="hero-panel">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-7">
-                    <h1 class="hero-title mb-4">Ajude onde a necessidade é real e visível.</h1>
+                    <h1 class="hero-title mb-4">Ajude onde a necessidade é real e visível</h1>
                     <p class="hero-copy mb-4">O portal foi pensado para que entidades beneficentes cadastrem
-                        itens necessários, divulguem estoques atuais e níveis ideais, enquanto doadores
+                        itens necessários, divulguem seus níveis atuais e ideais de estoque, enquanto doadores
                         consultam essas informações de forma prática e objetiva.</p>
                     <div class="hero-actions">
                         <a class="btn btn-app btn-primary-app" href="#necessidades">Itens mais urgentes</a>
@@ -17,22 +17,16 @@
                         <div class="col-12">
                             <article class="stat-card">
                                 <span class="status-chip status-danger mb-3"><i
-                                        class="bi bi-exclamation-triangle-fill"></i> Demanda urgente</span>
-                                <div class="stat-value">14 itens</div>
+                                        class="bi bi-exclamation-triangle-fill"></i>Demanda urgente</span>
+                                <div class="stat-value">5 itens</div>
                                 <p class="stat-label">Alimentos e itens não perecíveis com prioridade alta
                                     de reposição.</p>
                             </article>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-12">
                             <article class="stat-card">
-                                <div class="stat-value">8</div>
+                                <div class="stat-value">2 entidades</div>
                                 <p class="stat-label">Entidades com estoque atualizado nesta semana.</p>
-                            </article>
-                        </div>
-                        <div class="col-sm-6">
-                            <article class="stat-card">
-                                <div class="stat-value">3 níveis</div>
-                                <p class="stat-label">Falta, baixo e adequado para leitura rápida.</p>
                             </article>
                         </div>
                     </div>
@@ -47,7 +41,7 @@
         <div class="row g-4 align-items-end mb-4">
             <div class="col-lg-7">
                 <span class="section-kicker mb-3">Proposta do sistema</span>
-                <h2 class="section-title mb-3">Uma interface simples para reduzir ruído na comunicação.</h2>
+                <h2 class="section-title mb-3">Uma interface simples para reduzir ruído na comunicação</h2>
                 <p class="mb-0">O projeto nasce para resolver a falta de transparência sobre itens em falta
                     nos estoques de entidades beneficentes, problema que dificulta a comunicação com
                     possíveis doadores e compromete a eficiência das doações.</p>
@@ -57,7 +51,7 @@
             <div class="col-md-4">
                 <article class="info-card">
                     <div class="card-icon"><i class="bi bi-building"></i></div>
-                    <h3 class="h4 mb-3">Entidades cadastram</h3>
+                    <h3 class="h4 mb-3">Entidades se cadastram</h3>
                     <p class="mb-0">Cada instituição informa os itens de que necessita e pode publicar seu
                         estoque atual e o nível ideal para reposição. </p>
                 </article>
@@ -65,9 +59,9 @@
             <div class="col-md-4">
                 <article class="info-card">
                     <div class="card-icon"><i class="bi bi-clipboard-data"></i></div>
-                    <h3 class="h4 mb-3">Demandas ficam visíveis</h3>
-                    <p class="mb-0">O portal organiza as informações para leitura rápida, facilitando a
-                        identificação de carências específicas por entidade. </p>
+                    <h3 class="h4 mb-3">Demandas visíveis</h3>
+                    <p class="mb-0">As informações são organizadas para leitura rápida, facilitando a
+                        identificação das necessidades por entidade. </p>
                 </article>
             </div>
             <div class="col-md-4">
@@ -86,7 +80,7 @@
     <div class="container-app">
         <div class="row g-4 align-items-end mb-4">
             <div class="col-lg-8">
-                <span class="section-kicker mb-3">Leitura operacional</span>
+                <span class="section-kicker mb-3">Níveis atualizados</span>
                 <h2 class="section-title mb-3">Itens que precisam de atenção imediata.</h2>
                 <p class="mb-0">A proposta do sistema é apoiar o monitoramento de estoque de alimentos e
                     itens não perecíveis para tornar a reposição mais ágil entre entidades e doadores.
@@ -107,8 +101,8 @@
                             </div>
                             <span class="status-chip status-danger">Em falta</span>
                         </div>
-                        <p class="mb-0">Instituição com necessidade prioritária de arroz, leite em pó e
-                            produtos de higiene.</p>
+                        <p class="mb-0">Instituição com necessidade prioritária de arroz, leite em pó e produtos de
+                            higiene.</p>
                     </div>
                     <div class="entity-card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -135,7 +129,11 @@
                             <div class="progress-fill" style="width:55%"></div>
                         </div>
                     </div>
+                    <div class="section-actions">
+                        <a class="btn btn-app btn-outline-app" href="{{ url_for('estoque_lista') }}">Listar estoques</a>
+                    </div>
                 </article>
+
             </div>
             <div class="col-lg-6">
                 <article class="highlight-card h-100 d-flex flex-column justify-content-between">
@@ -241,7 +239,8 @@
                 <div class="col-lg-8">
                     <span class="section-kicker mb-3">Próximos passos</span>
                     <h2 class="section-title mb-3">Quer ajudar alguma causa?</h2>
-                    <p class="mb-0">Cadastre-se e recebe informações sobre as entidades e causas alinhadas do seu interesse.</p>
+                    <p class="mb-0">Cadastre-se e recebe informações sobre as entidades e causas alinhadas do seu
+                        interesse.</p>
                 </div>
                 <div class="col-lg-4 d-flex justify-content-lg-end">
                     <a class="btn btn-app btn-primary-app" href="{{ url_for('entidade') }}">Quero ajudar</a>

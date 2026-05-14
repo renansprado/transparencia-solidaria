@@ -400,6 +400,9 @@ section {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
+    margin-top: 2rem;
+    padding-bottom: 1.5rem;
+
 }
 
 .entity-card-header {
