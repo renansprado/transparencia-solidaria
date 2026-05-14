@@ -184,46 +184,40 @@
         <div class="row g-4 align-items-center">
             <div class="col-lg-5">
                 <span class="section-kicker mb-3">Gestão e transparência</span>
-                <h2 class="section-title mb-3">Base visual para as páginas internas.</h2>
-                <p class="mb-4">Além da página inicial, o sistema deve suportar cadastro de entidades,
-                    cadastro de doadores e acompanhamento de necessidades de reposição com a mesma linguagem
-                    visual. </p>
+                <h2 class="section-title mb-3">Veja as entidades presentes na nossa rede do bem</h2>
+                <p class="mb-4">No <strong>Estoque Solidário</strong> as entidades podem se cadastrar para ter acesso à rede de doadores e controlar seus estoques.</p>
                 <div class="section-actions">
-                    <a class="btn btn-app btn-outline-app" href="{{ url_for('entidade') }}">Entidades cadastradas</a>
+                    <a class="btn btn-app btn-outline-app" href="{{ url_for('entidade_lista') }}">Entidades cadastradas</a>
                 </div>
             </div>
             <div class="col-lg-7">
                 <div class="row g-4">
                     <div class="col-md-6">
                         <article class="info-card h-100">
-                            <div class="card-icon"><i class="bi bi-ui-checks-grid"></i></div>
-                            <h3 class="h5 mb-3">Cabeçalho padrão</h3>
-                            <p class="mb-0">Logo, navegação principal, botão de ação e alternância de tema
-                                para manter consistência entre páginas.</p>
+                            <div class="card-icon"><i class="bi bi-bounding-box"></i></div>
+                            <h3 class="h5 mb-3">Benefício para entidades</h3>
+                            <p class="mb-0">Após a aporvação do cadastro, as entidades podem manter um controle simples de seus estoques.</p>
                         </article>
                     </div>
                     <div class="col-md-6">
                         <article class="info-card h-100">
-                            <div class="card-icon"><i class="bi bi-layout-text-window"></i></div>
-                            <h3 class="h5 mb-3">Área de conteúdo</h3>
-                            <p class="mb-0">Hero interno com título, subtítulo e bloco principal em cards ou
-                                tabela, conforme o contexto funcional.</p>
+                            <div class="card-icon"><i class="bi bi-bar-chart-line"></i></div>
+                            <h3 class="h5 mb-3">Monitoramento dos estoques</h3>
+                            <p class="mb-0">Os dados podem ser inseridos diretamente na plataforma ou através de uma planilha eletrônica.</p>
                         </article>
                     </div>
                     <div class="col-md-6">
                         <article class="info-card h-100">
-                            <div class="card-icon"><i class="bi bi-input-cursor-text"></i></div>
-                            <h3 class="h5 mb-3">Formulários claros</h3>
-                            <p class="mb-0">Campos com labels, ajuda contextual e validação visual simples
-                                para reduzir erro operacional.</p>
+                            <div class="card-icon"><i class="bi bi-person-heart"></i></div>
+                            <h3 class="h5 mb-3">Benefício para doadores</h3>
+                            <p class="mb-0">Todas as entidades cadastradas passam por um processo de avaliação para garantir a idoneidade dentro de nossa rede.</p>
                         </article>
                     </div>
                     <div class="col-md-6">
                         <article class="info-card h-100">
-                            <div class="card-icon"><i class="bi bi-table"></i></div>
-                            <h3 class="h5 mb-3">Tabelas e status</h3>
-                            <p class="mb-0">Listagens responsivas com badges semânticos para leitura rápida
-                                de estoque, prioridade e atualização.</p>
+                            <div class="card-icon"><i class="bi bi-exclamation-square"></i></div>
+                            <h3 class="h5 mb-3">Estoques baixos</h3>
+                            <p class="mb-0">Quando os estoques estão baixos, a rede de doadores é avisada, trazendo maior agilidade e segurança para as entidades da rede.</p>
                         </article>
                     </div>
                 </div>

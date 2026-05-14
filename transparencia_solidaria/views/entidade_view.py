@@ -2,13 +2,13 @@ from typing import Annotated
 
 from fastapi import Depends, Query, HTTPException
 from fastapi.requests import Request
+from fastapi.responses import HTMLResponse
 from fastapi.routing import APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from transparencia_solidaria.core.configs import settings
 from transparencia_solidaria.core.database import get_db
 from transparencia_solidaria.repositories import entidade_repository
-
 
 router = APIRouter()
 
@@ -62,7 +62,7 @@ async def lista_entidades(
     }
 
     return settings.TEMPLATES.TemplateResponse(
-        name="entidade/lista.html",
+        name="entidade_lista.html",
         request=request,
         context=context,
     )
@@ -85,7 +85,20 @@ async def detalhe_entidade(
     }
 
     return settings.TEMPLATES.TemplateResponse(
-        name="entidade.html",   # reutiliza o template já existente no projeto
+        name="entidade.html",  # reutiliza o template já existente no projeto
         request=request,
         context=context,
     )
+
+
+@router.get("/entidades/cidades-por-estado", name="entidade_cidades_parcial")
+async def cidades_por_estado(
+    request: Request,
+    db: DbDep,
+    estado: Annotated[str | None, Query()] = None,
+):
+    cidades = await entidade_repository.listar_cidades(db, estado_sigla=estado)
+    options_html = '<option value="">Todas</option>'
+    for c in cidades:
+        options_html += f'<option value="{c.nome}">{c.nome}</option>'
+    return HTMLResponse(content=options_html)
