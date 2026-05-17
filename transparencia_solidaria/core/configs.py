@@ -12,22 +12,13 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    DB_URL: str = f'postgresql+asyncpg://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost:5432/transparencia_solidaria'
+    DB_URL: str = f'postgresql+asyncpg://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@{os.getenv("DB_HOST", "localhost")}:{os.getenv("DB_PORT", "5432")}/{os.getenv("DB_NAME", "transparencia_solidaria")}'
     DBBaseModel: ClassVar = declarative_base()
     TEMPLATES: Jinja2Templates = Jinja2Templates(directory='templates')
     MEDIA: Path = Path('media')
 
     model_config = SettingsConfigDict(
         case_sensitive=True,
-        # opcional: carregar de .env
-        # env_file = ".env",
-        # env_file_encoding = "utf-8",
     )
 
 settings: Settings = Settings()
-
-if __name__ == '__main__':
-    print(settings.DB_URL)
-    # settings = Settings()
-    print(f'User: {os.getenv("DB_USER")} | Psswrd: {os.getenv("DB_PASSWORD")}')
-    print('pronto!')
